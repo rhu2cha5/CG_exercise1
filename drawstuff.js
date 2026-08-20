@@ -77,39 +77,45 @@ function main() {
     var h = context.canvas.height;  // as set in html
     var imagedata = context.createImageData(w,h);
  
-    var red = new Color(200,30,30,255);   // cap color
-var cream = new Color(255,240,220,255); // stem color
-var white = new Color(255,255,255,255); // spots
+    // legend: . = skip, K = black, P = pink, W = white, Y = yellow
+    var mushroomGrid = [
+    "................",
+    "................",
+    ".......KKKK.....",
+    "......KPPPPK....",
+    ".....KPPPPPWK...",
+    "....KPPWWPPPK...",
+    "....KKKKKKKKK...",
+    "......KYYYYK....",
+    "......KYYYYK....",
+    "......KKKKKK...."
+    ];
 
-// cap: ellipse centered at (256,200) with radius 90 wide, 60 tall
-var cx = 256, cy = 200, rx = 90, ry = 60;
-for (var x = cx-rx; x <= cx+rx; x++)
-    for (var y = cy-ry; y <= cy+ry; y++) {
-        var dx = (x-cx)/rx;
-        var dy = (y-cy)/ry;
-        if (dx*dx + dy*dy <= 1) {
-            drawPixel(imagedata,x,y,red);
-        }
-    }
+    var palette = {
+        "K": new Color(20,20,20,255),
+        "P": new Color(235,90,110,255),
+        "W": new Color(255,255,255,255),
+        "Y": new Color(250,230,160,255)
+    };
 
-    // stem: rectangle under the cap
-    for (var x=226; x<286; x++)
-        for (var y=200; y<320; y++) {
-            drawPixel(imagedata,x,y,cream);
-        }
+    var cellSize = 20;   // how big each grid square is in real pixels
+    var startX = 80;     // where the design begins on the canvas
+    var startY = 80;
 
-    // spots on the cap (small ellipses)
-    var spots = [ [220,180,12,10], [280,190,10,8], [250,160,8,7] ];
-    for (var s=0; s<spots.length; s++) {
-        var sx=spots[s][0], sy=spots[s][1], srx=spots[s][2], sry=spots[s][3];
-        for (var x = sx-srx; x <= sx+srx; x++)
-            for (var y = sy-sry; y <= sy+sry; y++) {
-                var dx = (x-sx)/srx;
-                var dy = (y-sy)/sry;
-                if (dx*dx + dy*dy <= 1) {
-                    drawPixel(imagedata,x,y,white);
+    for (var row = 0; row < mushroomGrid.length; row++) {
+        for (var col = 0; col < mushroomGrid[row].length; col++) {
+            var code = mushroomGrid[row][col];
+            if (code === ".") continue; // skip empty cells
+
+            var color = palette[code];
+            var blockX = startX + col*cellSize;
+            var blockY = startY + row*cellSize;
+
+            for (var x = blockX; x < blockX+cellSize; x++)
+                for (var y = blockY; y < blockY+cellSize; y++) {
+                    drawPixel(imagedata, x, y, color);
                 }
-            }
+        }
     }
     
     context.putImageData(imagedata, 0, 0); // display the image in the context
