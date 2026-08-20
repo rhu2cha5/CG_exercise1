@@ -77,13 +77,40 @@ function main() {
     var h = context.canvas.height;  // as set in html
     var imagedata = context.createImageData(w,h);
  
-    // Draw a rectangle with pixels
-    var c = new Color(0,0,0,255); // the color at the pixel: black opaque
-    for (var x=50; x<100; x++) 
-        for (var y=50; y<75; y++) {
-            drawPixel(imagedata,x,y,c);
-            // console.log("draw at " +x+ " " +y);
+    var red = new Color(200,30,30,255);   // cap color
+var cream = new Color(255,240,220,255); // stem color
+var white = new Color(255,255,255,255); // spots
+
+// cap: ellipse centered at (256,200) with radius 90 wide, 60 tall
+var cx = 256, cy = 200, rx = 90, ry = 60;
+for (var x = cx-rx; x <= cx+rx; x++)
+    for (var y = cy-ry; y <= cy+ry; y++) {
+        var dx = (x-cx)/rx;
+        var dy = (y-cy)/ry;
+        if (dx*dx + dy*dy <= 1) {
+            drawPixel(imagedata,x,y,red);
         }
+    }
+
+    // stem: rectangle under the cap
+    for (var x=226; x<286; x++)
+        for (var y=200; y<320; y++) {
+            drawPixel(imagedata,x,y,cream);
+        }
+
+    // spots on the cap (small ellipses)
+    var spots = [ [220,180,12,10], [280,190,10,8], [250,160,8,7] ];
+    for (var s=0; s<spots.length; s++) {
+        var sx=spots[s][0], sy=spots[s][1], srx=spots[s][2], sry=spots[s][3];
+        for (var x = sx-srx; x <= sx+srx; x++)
+            for (var y = sy-sry; y <= sy+sry; y++) {
+                var dx = (x-sx)/srx;
+                var dy = (y-sy)/sry;
+                if (dx*dx + dy*dy <= 1) {
+                    drawPixel(imagedata,x,y,white);
+                }
+            }
+    }
     
     context.putImageData(imagedata, 0, 0); // display the image in the context
 }
