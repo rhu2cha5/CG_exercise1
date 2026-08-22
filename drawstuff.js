@@ -77,13 +77,13 @@ function main() {
     var h = context.canvas.height;  // as set in html
     var imagedata = context.createImageData(w,h);
  
-    // legend: . = skip, K = black, P = pink, W = white, Y = yellow
+    // . = skip, K = black, P = pink, W = white, Y = yellow
     var mushroomGrid = [
     "................",
     "................",
-    ".......KKKK.....",
-    "......KPPPPK....",
-    ".....KPPPPPWK...",
+    "....KKKKKKKKK...",
+    "....KPPPPPPPK...",
+    "....KPPPPPPPK...",
     "....KPPWWPPPK...",
     "....KKKKKKKKK...",
     "......KYYYYK....",
@@ -105,7 +105,7 @@ function main() {
     for (var row = 0; row < mushroomGrid.length; row++) {
         for (var col = 0; col < mushroomGrid[row].length; col++) {
             var code = mushroomGrid[row][col];
-            if (code === ".") continue; // skip empty cells
+            if (code === ".") continue;
 
             var color = palette[code];
             var blockX = startX + col*cellSize;
